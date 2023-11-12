@@ -129,10 +129,10 @@ def RT_trace_ray(scene, ray_orig, ray_dir, lights, depth=0):
         #
         # First, calculate the direction vector from the hit location to the light and call it light_vec.
         # The location of the light can be accessed through light.location.
-        light_vec = Vector(hit_loc.x - light.location.x, hit_loc.y - light.location.y, hit_loc.z - light.location.z).xyz # replaced Vector(np.ones(3))
+        light_vec = Vector(np.array([hit_loc.x - light.location.x, hit_loc.y - light.location.y, hit_loc.z - light.location.z])).xyz # replaced Vector(np.ones(3))
         
         # Normalize light_vec and save that as light_dir.
-        light_dir = light_vec.normalize() # replaced np.ones(3)
+        light_dir = light_vec.normalized() # replaced np.ones(3)
         
         # Calculate the origin of the shadow ray: new_orig.
         # Remember to account for spurious self-occlusion!
