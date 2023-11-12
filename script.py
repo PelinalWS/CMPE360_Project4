@@ -186,12 +186,17 @@ def RT_trace_ray(scene, ray_orig, ray_dir, lights, depth=0):
         
         # Calculate diffuse component and add that to the pixel color
         #
-        color += np.array(diffuse_color) # REPLACE WITH YOUR CODE
+        k_diffuse = np.array(diffuse_color)
+        I_diffuse = k_diffuse * I_light * (light_dir.dot(hit_norm))
+        color += np.array(I_diffuse) # replaced color += np.array(diffuse_color)
         #
         # Re-run this script, and render the scene to check your result 
         # ----------
         # Calculate specular component and add that to the pixel color
         # FILL WITH YOUR CODE
+        k_specular = np.array(specular_color)
+        I_specular = k_specular * I_light * (hit_norm.dot((light_dir - ray_dir).normalized()) ** specular_hardness)
+        color += np.array(I_specular)
         #
         # Re-run this script, and render the scene to check your result 
         # ----------
