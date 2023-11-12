@@ -129,14 +129,22 @@ def RT_trace_ray(scene, ray_orig, ray_dir, lights, depth=0):
         #
         # First, calculate the direction vector from the hit location to the light and call it light_vec.
         # The location of the light can be accessed through light.location.
-        light_vec = Vector(np.array([hit_loc.x - light.location.x, hit_loc.y - light.location.y, hit_loc.z - light.location.z])).xyz # replaced Vector(np.ones(3))
-        
+        # For x, y and z; light.location must be subtracted by the hit's location
+        # To write this with the Vector(....).xyz syntax, it was written as an array.
+        #
+        light_vec = Vector(np.array([light.location.x - hit_loc.x, light.location.y - hit_loc.y, light.location.z - hit_loc.z])).xyz # replaced Vector(np.ones(3))
+        #
         # Normalize light_vec and save that as light_dir.
+        # light_dir works as the unit vector with the same direction
+        #
         light_dir = light_vec.normalized() # replaced np.ones(3)
-        
+        #
         # Calculate the origin of the shadow ray: new_orig.
         # Remember to account for spurious self-occlusion!
-        new_orig = ray_orig + eps*light_dir # replaced np.ones(3)
+        # The light_dir is a vector and it can be multiplied with the scalar value eps
+        # Since hit_loc is the point that the ray hits, it should be checked next.
+        #
+        new_orig = hit_loc + eps*light_dir # replaced np.ones(3)
         #
         # Cast the shadow ray from the hit location to the light using Blender's ray cast function.
         has_light_hit, _, _, _, _, _ = ray_cast(
@@ -188,15 +196,19 @@ def RT_trace_ray(scene, ray_orig, ray_dir, lights, depth=0):
         #
         k_diffuse = np.array(diffuse_color)
         I_diffuse = k_diffuse * I_light * (light_dir.dot(hit_norm))
-        color += np.array(I_diffuse) # replaced color += np.array(diffuse_color)
+        color += np.array(I_diffuse)
         #
         # Re-run this script, and render the scene to check your result 
         # ----------
         # Calculate specular component and add that to the pixel color
         # FILL WITH YOUR CODE
+        #
         k_specular = np.array(specular_color)
         I_specular = k_specular * I_light * (hit_norm.dot((light_dir - ray_dir).normalized()) ** specular_hardness)
         color += np.array(I_specular)
+        #
+        # Original line of code:
+        # color += np.array(diffuse_color)
         #
         # Re-run this script, and render the scene to check your result 
         # ----------
@@ -213,7 +225,11 @@ def RT_trace_ray(scene, ray_orig, ray_dir, lights, depth=0):
     #
     # I_ambient = k_diffuse * k_ambient
     if no_light_hit:
-        color += np.zeros(3) # REPLACE WITH YOUR CODE
+        k_diffuse = np.array(diffuse_color)
+        I_ambient = k_diffuse * ambient_color
+        color += np.array(I_ambient)
+        # Original line of code:
+        # color += np.zeros(3)
     #
     # Re-run this script, and render the scene to check your result with Checkpoint 3.
     # ----------
