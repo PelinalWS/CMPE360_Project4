@@ -9,7 +9,7 @@
 bl_info = {
     "name": "simple_ray_tracer",
     "description": "Simple Ray-tracer for CMPE360",
-    "author": "CMPE360",
+    "author": "Batuhan İşcan & Kerem Güven",
     "version": (0, 0, 2023),
     "blender": (3, 5, 1),
     "category": "Render",
